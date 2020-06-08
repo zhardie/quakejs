@@ -21,7 +21,7 @@ Add or delete content with a ZIP-Manager then
 ```shell
 mv pak0.zip pak0.pk3
 ```
-## Sources for custom content
+## Sources for custom content and missing textures
 The Q3A demo is missing some textures and models compared with the full version (e.g. there is no BFG10!).
 Therefore you might run into issues with missing textures or models when you add custom maps.
 In order to add those missing items you can take the files from freely available sources.
@@ -38,6 +38,8 @@ Since openarena still misses a lot of textures replacement packs have been creat
 
 The good news is that the files usually have the same name as in Q3A and you can find them in the same folder structure in the PK3 files. So it's basically about identifying what you need and then copy the files from one PAK3 to the same location in the pak0.pk3 you use on your server.
 
+**It's not a good idea to simply copy all (hi-res) textures - this will make the pak0.pk3 too large!**
+
 There are severaly websites that host maps for Q3A. I like Ente's Padmaps - Padgarden is one of the rare maps that use the fly item ;) 
 [World of Padman](https://worldofpadman.net/en/download/padfiles-q3a/)
 
@@ -49,7 +51,7 @@ In order to keep the size low you might want to delete the original maps from th
 
 ## Preparing your server
 
-In order for your server to accept the changes pak0.pk3 you need to make some changes in some text files and copy yor pak in the right places.
+In order for your server to accept the changes in pak0.pk3 you need to make some changes in some text files and copy your pak to the right places.
 
 ### .js-files
 
@@ -75,7 +77,7 @@ Delete **exactly** this from the files:
 
 Press "CTRL+o" to write the file and "CTRL+x" to exit nano.
 
-### copy pak0.pk3
+### Copy pak0.pk3
 
 Delete the old pak0 from the assets folder
 ```shell
@@ -90,14 +92,14 @@ sudo cp /path/to/your/file/pak0.pk3 /var/www/html/assets/baseq3
 
 The file in the *web-server-folder* (**not the one in your home folder!!!**) needs to be renamed. You need the files CRC32 checksum as a prefix. This checksum needs to be added to the manifest.json in a later step as well.
 
-**the result should look like this**
+**The result should look like this:**
 12345678-pak0.pk3
 
-**Creating the checksums**
+### Creating the checksums
 
 I have made two scripts that help you to calculate the checksum for pak-files (you need to know it in order to rename the files in your /var/www/html/assets/baseq3/ folder and to adjust the values in manifest.json)
 
-*If are not sure which tool/shell command to execute take "crc-rename" -> Example -> "Rename a single file"* 
+*If are not sure which tool/shell command to execute take "crc-rename" -> Example: "Rename a single file" **after** you have copied pak0.pk3 in the webserver folder.* 
 
 Both scripts need libarchive-zip-perl to calculate the checksum
 
@@ -113,6 +115,7 @@ sudo chmod +x crc32info
 ```
 
 **Examples**
+
 Get the crc32-info for one file
 ```shell 
  ./crc32info /var/www/html/assets/baseq3/pak0.pk3
@@ -137,16 +140,17 @@ sudo apt install bash
 ```
 
 **Examples**
+
 Rename a single file 
 ```
 sudo ./crc-rename /var/www/html/assets/baseq3/pak0.pk3
 ```
-rename more than one file 
+Rename more than one file 
 ```
 sudo ./crc-rename filename1 filename2 ...
 ```
 
-rename all pk3's in other directories
+Rename all pk3's in other directories
 ```
 sudo ./crc-rename /var/www/html/assets/base*/*
 ```
@@ -160,7 +164,7 @@ sudo nano /var/www/html/asssets/manifest.json
 ```
 
 After the info for pak101.pk3 add (**replace file size and checksum with the values for your file!!!**)
-"Compressed" is the size in bytes. It seems it doesn't really matter if this value is not correct.
+"Compressed" is the size in bytes. It seems it doesn't really matter if this value is not correct. Please note that the filename in the manifest does **not** contain the checksum.
 
 ```
   {
@@ -216,17 +220,16 @@ If the map uses a lot of textures/shaders the upper part of the list sometimes i
 ### BFG10
 
 You need the files from opeanarenas pak0.pk3 ("*" means all files from that folder)
-
-/models/powerups/ammo/bfgam.md3
-/models/powerups/ammo/bfgammo2.tga
-/models/weaphits/bfgboom/*
-/models/weaphits/bfg.md3
-/models/weaphits/bfg.tga
-/models/weaphits/bfg01.jpg
-/models/weaphits/bfg02.jpg
-/models/weaphits/bfg03.jpg
-/models/weaphits/bfg2.tga
-/models/weaphits/bfg3.tga
-/models/weaphits/bfgscroll.tga
-/models/weaphits/fbfg.md3
-/models/weapons2/bfg/*
+* /models/powerups/ammo/bfgam.md3
+* /models/powerups/ammo/bfgammo2.tga
+* /models/weaphits/bfgboom/*
+* /models/weaphits/bfg.md3
+* /models/weaphits/bfg.tga
+* /models/weaphits/bfg01.jpg
+* /models/weaphits/bfg02.jpg
+* /models/weaphits/bfg03.jpg
+* /models/weaphits/bfg2.tga
+* /models/weaphits/bfg3.tga
+* /models/weaphits/bfgscroll.tga
+* /models/weaphits/fbfg.md3
+* /models/weapons2/bfg/*
